@@ -1,35 +1,42 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
+title Git Sync - Commit & Push para GitHub
+cd /d "%~dp0"
+
 set "GIT_CMD=C:\Users\Eduardo Oliveira\AppData\Local\Programs\Git\cmd\git.exe"
 if not exist "%GIT_CMD%" set "GIT_CMD=git"
 
 echo ==============================================================
-echo       PUBLICAR NO GITHUB - LOVABLE TERMINAL RECEIVER
+echo        SINCRONIZAR COM GITHUB (ADD, COMMIT E PUSH)
 echo ==============================================================
 echo.
 
-set /p REPO_URL="Cole a URL do seu repositorio GitHub (ex: https://github.com/SEU_USER/repo.git): "
+echo [1/3] Verificando arquivos alterados...
+"%GIT_CMD%" status -s
+echo.
 
-if "%REPO_URL%"=="" (
-    echo [ERRO] Nenhuma URL informada. Operacao cancelada.
-    pause
-    exit /b
+set /p COMMIT_MSG="Digite a mensagem do commit (ou Enter para padrao): "
+
+if "%COMMIT_MSG%"=="" (
+    set "COMMIT_MSG=feat: update project files and autodrome animations"
 )
 
 echo.
-echo Conectando ao repositorio remoto...
-"%GIT_CMD%" remote remove origin 2>nul
-"%GIT_CMD%" remote add origin %REPO_URL%
-"%GIT_CMD%" branch -M main
+echo [2/3] Adicionando arquivos e realizando commit...
+"%GIT_CMD%" add .
+"%GIT_CMD%" commit -m "%COMMIT_MSG%"
 
-echo Enviando arquivos para o GitHub...
-"%GIT_CMD%" push -u origin main
+echo.
+echo [3/3] Enviando alteracoes para o GitHub (main)...
+"%GIT_CMD%" push origin main
 
 echo.
 if %ERRORLEVEL% EQU 0 (
-    echo [SUCESSO] Seu projeto foi publicado no GitHub!
+    echo ==============================================================
+    echo  [SUCESSO] Alteracoes enviadas com sucesso para o GitHub!
+    echo ==============================================================
 ) else (
-    echo [AVISO] Se solicitou login, faca a autenticacao na janela do navegador/terminal.
+    echo [AVISO] Ocorreu uma pendencia no push. Verifique conexao ou permissoes.
 )
 
 pause
