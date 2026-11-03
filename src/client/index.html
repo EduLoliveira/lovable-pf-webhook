@@ -7,26 +7,85 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
-      background: #090d16;
+      background: #060913;
       color: #f1f5f9;
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* =====================================================================
+       PISTA EM BACKGROUND (Discreta, no fundo enquanto cadastra)
+       ===================================================================== */
+    #circuit-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.18;
+      pointer-events: none;
+      background: radial-gradient(circle at center, #1e293b 10%, #060913 80%);
+      transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      padding: 24px 16px;
+      padding: 20px;
+    }
+
+    /* Efeito de asfalto */
+    .bg-road-effect {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* =====================================================================
+       QUANDO OS 3 PILOTOS ENTRAM: A PISTA VIRA O PLANO PRIMÁRIO!
+       ===================================================================== */
+    body.race-mode #circuit-bg {
+      opacity: 1;
+      z-index: 100;
+      pointer-events: auto;
+      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+      backdrop-filter: blur(8px);
+    }
+
+    /* O formulário recua e desaparece suavemente */
+    body.race-mode .main-wrapper {
+      opacity: 0;
+      transform: scale(0.92) translateY(-30px);
+      pointer-events: none;
+      transition: all 0.8s ease-in-out;
+    }
+
+    /* =====================================================================
+       CONTEÚDO PRINCIPAL (FORMULÁRIO E GRID)
+       ===================================================================== */
+    .main-wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      transition: all 0.7s ease-in-out;
     }
 
     header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
 
     h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 2rem;
-      background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, #38bdf8, #818cf8, #f43f5e);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: 1px;
@@ -39,25 +98,22 @@
     }
 
     .container {
-      width: 100%;
-      max-width: 960px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.1fr 0.9fr;
       gap: 24px;
     }
 
-    @media (max-width: 800px) {
+    @media (max-width: 820px) {
       .container { grid-template-columns: 1fr; }
     }
 
-    /* CARD DO FORMULÁRIO */
     .card {
-      background: rgba(30, 41, 59, 0.7);
+      background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
     .badge-bar {
@@ -91,14 +147,14 @@
     label {
       display: block;
       font-size: 0.8rem;
-      color: #cbd5e1;
+      color: #94a3b8;
       margin-bottom: 4px;
       font-weight: 500;
     }
 
     input, textarea {
       width: 100%;
-      background: #0f172a;
+      background: #020617;
       border: 1px solid #334155;
       border-radius: 8px;
       padding: 10px 12px;
@@ -132,120 +188,36 @@
       cursor: pointer;
       margin-top: 10px;
       transition: all 0.3s;
-      letter-spacing: 0.5px;
     }
 
     button.btn-submit:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5);
     }
 
-    button.btn-submit:disabled {
-      background: #334155;
-      color: #64748b;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* AUTODROMO & PISTA */
-    .track-card {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 24px;
+    /* CARD DE STATUS DO GRID */
+    .grid-slots-card {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-    }
-
-    .track-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.1rem;
-      color: #facc15;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .lane-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .lane {
-      background: #020617;
-      border: 1px dashed #334155;
-      border-radius: 10px;
-      padding: 10px 14px;
-      position: relative;
-    }
-
-    .lane-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      margin-bottom: 6px;
-    }
-
-    .lane-pilot {
-      font-weight: 600;
-      color: #f8fafc;
-    }
-
-    .lane-car-badge {
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-
-    .lane-track {
-      height: 38px;
-      background: #1e293b;
-      border-radius: 6px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      border-right: 4px solid #ef4444; /* Linha de chegada */
-    }
-
-    .finish-line {
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 12px;
-      background: repeating-linear-gradient(45deg, #fff, #fff 4px, #000 4px, #000 8px);
-    }
-
-    .car {
-      position: absolute;
-      left: 0%;
-      font-size: 1.5rem;
-      transition: left 0.4s ease-out;
-      transform: translateY(-2px);
-    }
-
-    /* GRID LIST */
-    .grid-slots {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 14px;
     }
 
     .slot-item {
-      background: #1e293b;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 0.85rem;
+      background: #0b1329;
+      border: 1px solid #1e293b;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 10px;
+      transition: all 0.3s;
+    }
+
+    .slot-item.filled {
+      border-color: #0284c7;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.2);
     }
 
     .slot-item.empty {
@@ -254,281 +226,425 @@
       background: transparent;
     }
 
-    .btn-reset {
-      background: transparent;
-      border: 1px solid #475569;
-      color: #cbd5e1;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
+    /* =====================================================================
+       ESTRUTURA DA PISTA DO AUTÓDROMO (QUANDO PASSA PARA PRIMÁRIO)
+       ===================================================================== */
+    .grand-prix-arena {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      z-index: 101;
+    }
+
+    .arena-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid #334155;
+      padding: 16px 24px;
+      border-radius: 16px;
+    }
+
+    .arena-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      color: #facc15;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* PISTAS DE CORRIDA */
+    .racetrack {
+      background: #020617;
+      border: 2px solid #334155;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .lane {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .lane:last-child {
+      margin-bottom: 0;
+    }
+
+    .lane-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .pilot-tag {
+      font-weight: 700;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
       font-size: 0.85rem;
+    }
+
+    .car-asphalt {
+      height: 60px;
+      background: #111827;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      border-top: 1px dashed #374151;
+      border-bottom: 1px dashed #374151;
+    }
+
+    /* Linhas pontilhadas centrais da pista */
+    .car-asphalt::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, #facc15, #facc15 20px, transparent 20px, transparent 40px);
+      transform: translateY(-50%);
+      opacity: 0.4;
+    }
+
+    .finish-checkers {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 20px;
+      background: repeating-linear-gradient(45deg, #fff, #fff 5px, #000 5px, #000 10px);
+      z-index: 2;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.5);
+    }
+
+    .race-car {
+      position: absolute;
+      left: 0%;
+      font-size: 2.2rem;
+      transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 5;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.8));
+    }
+
+    /* PÓDIO / CAMPEÃO */
+    .podium-modal {
+      display: none;
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.25), rgba(245, 158, 11, 0.1));
+      border: 2px solid #eab308;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(234, 179, 8, 0.4);
+      animation: popIn 0.5s ease-out;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      border: none;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
       transition: all 0.2s;
     }
-    .btn-reset:hover {
-      background: #334155;
-      color: #fff;
-    }
 
-    /* PODIUM MODAL */
-    #winner-banner {
-      display: none;
-      background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(245, 158, 11, 0.1));
-      border: 2px solid #eab308;
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      margin-top: 16px;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(234, 179, 8, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); }
+    .btn-action:hover {
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>AUTÓDROMO LOVABLE BOT RACING</h1>
-    <p class="subtitle">Cadastre 3 Pessoas Físicas. A cada envio, os campos são limpos. Na 3ª pessoa, os Bots iniciam o Grande Prêmio!</p>
-  </header>
+  <!-- =====================================================================
+       CAMADA DO AUTÓDROMO (Transiciona de Background para Primário)
+       ===================================================================== -->
+  <div id="circuit-bg">
+    <div class="bg-road-effect"></div>
 
-  <div class="container">
-    
-    <!-- LADO 1: FORMULÁRIO PF (LIMPA A CADA ENVIO - LIMITE 3) -->
-    <div class="card">
-      <div class="badge-bar">
-        <span class="badge" id="badgeRodada">Piloto 1 de 3</span>
-        <span class="slots-pill" id="slotsCount">Restam 3 vagas</span>
+    <div class="grand-prix-arena">
+      <div class="arena-header">
+        <div class="arena-title">
+          <span>🏁</span>
+          <span>GRANDE PRÊMIO DOS BOTS - AUTÓDROMO OFICIAL</span>
+        </div>
+        <button class="btn-action" id="btnNovaBateria">Reiniciar Corrida</button>
       </div>
 
-      <form id="formCadastro">
-        <div class="field">
-          <label for="nome">Nome Completo</label>
-          <input type="text" id="nome" required placeholder="Ex: Ayrton Senna">
-        </div>
-
-        <div class="grid-2">
-          <div class="field">
-            <label for="cpf">CPF</label>
-            <input type="text" id="cpf" required placeholder="000.000.000-00">
+      <div class="racetrack">
+        <!-- BOT 1 -->
+        <div class="lane">
+          <div class="lane-info">
+            <span class="pilot-tag" style="color:#ef4444;" id="arena-bot-1-tag">BOT #1 - VERMELHO TURBO</span>
+            <span id="arena-bot-1-name" style="color:#cbd5e1;">Aguardando...</span>
           </div>
-          <div class="field">
-            <label for="dataNascimento">Data de Nascimento</label>
-            <input type="date" id="dataNascimento" required>
+          <div class="car-asphalt">
+            <div class="race-car" id="arena-car-1">🏎️</div>
+            <div class="finish-checkers"></div>
           </div>
         </div>
 
-        <div class="grid-2">
-          <div class="field">
-            <label for="email">E-mail</label>
-            <input type="email" id="email" required placeholder="piloto@gp.com">
+        <!-- BOT 2 -->
+        <div class="lane">
+          <div class="lane-info">
+            <span class="pilot-tag" style="color:#38bdf8;" id="arena-bot-2-tag">BOT #2 - AZUL RELÂMPAGO</span>
+            <span id="arena-bot-2-name" style="color:#cbd5e1;">Aguardando...</span>
           </div>
-          <div class="field">
-            <label for="telefone">Telefone</label>
-            <input type="tel" id="telefone" placeholder="(11) 98888-7777">
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="field">
-            <label for="cep">CEP</label>
-            <input type="text" id="cep" placeholder="01001-000">
-          </div>
-          <div class="field">
-            <label for="cidade">Cidade / UF</label>
-            <input type="text" id="cidade" placeholder="São Paulo / SP">
+          <div class="car-asphalt">
+            <div class="race-car" id="arena-car-2">🏎️</div>
+            <div class="finish-checkers"></div>
           </div>
         </div>
 
-        <div class="field">
-          <label for="observacoes">Observações / Estratégia de Pista</label>
-          <textarea id="observacoes" rows="2" placeholder="Ex: Pneus macios para a largada..."></textarea>
+        <!-- BOT 3 -->
+        <div class="lane">
+          <div class="lane-info">
+            <span class="pilot-tag" style="color:#facc15;" id="arena-bot-3-tag">BOT #3 - TROVÃO DOURADO</span>
+            <span id="arena-bot-3-name" style="color:#cbd5e1;">Aguardando...</span>
+          </div>
+          <div class="car-asphalt">
+            <div class="race-car" id="arena-car-3">🏎️</div>
+            <div class="finish-checkers"></div>
+          </div>
         </div>
+      </div>
 
-        <button type="submit" class="btn-submit" id="btnSubmit">
-          INSCREVER PILOTO NO GRID
-        </button>
-      </form>
+      <!-- PÓDIO / VENCEDOR -->
+      <div class="podium-modal" id="podiumBox">
+        <h2 style="font-family:'Orbitron'; font-size:1.8rem; color:#facc15; margin-bottom:8px;">🏆 TROFÉU DO AUTÓDROMO 🏆</h2>
+        <p id="podiumMessage" style="font-size:1.15rem; font-weight:600;"></p>
+        <div style="margin-top:16px;">
+          <button class="btn-action" id="btnVoltarForm" style="background:#10b981;">Cadastrar Novos Pilotos</button>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- LADO 2: AUTÓDROMO COM CORRIDA DOS BOTS EM TEMPO REAL -->
-    <div class="track-card">
-      <div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <div class="track-title">🏁 AUTÓDROMO VIRTUAL</div>
-          <button class="btn-reset" id="btnReset" title="Limpar grid para nova bateria">Nova Corrida</button>
+  <!-- =====================================================================
+       CAMADA PRIMÁRIA INICIAL (Formulário PF de Inscrição)
+       ===================================================================== -->
+  <div class="main-wrapper">
+    <header>
+      <h1>CADASTRO PF & GP AUTÓDROMO</h1>
+      <p class="subtitle">Cadastre 3 pessoas. A cada envio as labels são limpas. Ao completar 3, a pista vem para primeiro plano!</p>
+    </header>
+
+    <div class="container">
+      
+      <!-- FORMULÁRIO -->
+      <div class="card">
+        <div class="badge-bar">
+          <span class="badge" id="badgeVagas">Piloto 1 de 3</span>
+          <span class="slots-pill" id="slotsRestantes">3 vagas abertas</span>
         </div>
 
-        <!-- 3 PISTAS PARA OS BOTS -->
-        <div class="lane-container">
-          <!-- LANE 1 -->
-          <div class="lane">
-            <div class="lane-header">
-              <span class="lane-pilot" id="pilot-1-name">Vaga #1: Aguardando cadastro...</span>
-              <span class="lane-car-badge" style="background:#ef4444; color:#fff;">Bot #1 Turbo</span>
+        <form id="formCadastro">
+          <div class="field">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" required placeholder="Digite o nome da pessoa">
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="cpf">CPF</label>
+              <input type="text" id="cpf" required placeholder="000.000.000-00">
             </div>
-            <div class="lane-track">
-              <div class="car" id="car-1">🏎️</div>
-              <div class="finish-line"></div>
+            <div class="field">
+              <label for="dataNascimento">Data de Nascimento</label>
+              <input type="date" id="dataNascimento" required>
             </div>
           </div>
 
-          <!-- LANE 2 -->
-          <div class="lane">
-            <div class="lane-header">
-              <span class="lane-pilot" id="pilot-2-name">Vaga #2: Aguardando cadastro...</span>
-              <span class="lane-car-badge" style="background:#3b82f6; color:#fff;">Bot #2 Flash</span>
+          <div class="grid-2">
+            <div class="field">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" required placeholder="contato@email.com">
             </div>
-            <div class="lane-track">
-              <div class="car" id="car-2">🏎️</div>
-              <div class="finish-line"></div>
+            <div class="field">
+              <label for="telefone">Telefone</label>
+              <input type="tel" id="telefone" placeholder="(11) 99999-8888">
             </div>
           </div>
 
-          <!-- LANE 3 -->
-          <div class="lane">
-            <div class="lane-header">
-              <span class="lane-pilot" id="pilot-3-name">Vaga #3: Aguardando cadastro...</span>
-              <span class="lane-car-badge" style="background:#eab308; color:#000; font-weight:bold;">Bot #3 Trovão</span>
+          <div class="grid-2">
+            <div class="field">
+              <label for="cep">CEP</label>
+              <input type="text" id="cep" placeholder="01310-100">
             </div>
-            <div class="lane-track">
-              <div class="car" id="car-3">🏎️</div>
-              <div class="finish-line"></div>
+            <div class="field">
+              <label for="cidade">Cidade / UF</label>
+              <input type="text" id="cidade" placeholder="São Paulo / SP">
             </div>
           </div>
-        </div>
 
-        <!-- PODIUM / RESULTADO -->
-        <div id="winner-banner">
-          <h2 style="font-family:'Orbitron'; color:#facc15; font-size:1.3rem;">🏆 GRANDE CAMPEÃO! 🏆</h2>
-          <p id="winner-text" style="margin-top:6px; font-weight:600;"></p>
-        </div>
+          <div class="field">
+            <label for="observacoes">Observações / Detalhes</label>
+            <textarea id="observacoes" rows="2" placeholder="Informações adicionais do cadastro..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit" id="btnSubmit">
+            INSCREVER PESSOA (1/3)
+          </button>
+        </form>
       </div>
 
       <!-- STATUS DO GRID -->
-      <div>
-        <h4 style="font-size:0.8rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Grid de Largada Registrado</h4>
-        <div class="grid-slots" id="slotsList">
-          <div class="slot-item empty">Posição 1: Livre</div>
-          <div class="slot-item empty">Posição 2: Livre</div>
-          <div class="slot-item empty">Posição 3: Livre</div>
+      <div class="card grid-slots-card">
+        <div>
+          <h3 style="font-family:'Orbitron'; font-size:1.1rem; color:#38bdf8; margin-bottom:14px;">Grid de Pilotos</h3>
+          <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:18px;">Cada pessoa enviada assume o comando de um Bot na pista do autódromo.</p>
+
+          <div id="gridList">
+            <div class="slot-item empty">🏎️ Vaga 1: Livre (Bot Vermelho)</div>
+            <div class="slot-item empty">🏎️ Vaga 2: Livre (Bot Azul)</div>
+            <div class="slot-item empty">🏎️ Vaga 3: Livre (Bot Dourado)</div>
+          </div>
+        </div>
+
+        <div style="background:rgba(2,132,199,0.1); border:1px solid #0284c7; padding:12px; border-radius:10px; font-size:0.8rem; color:#bae6fd;">
+          💡 <b>Regra do Cenário:</b> Quando o 3º piloto for submetido, o formulário se oculta e o Autódromo vem do background para o plano primário!
         </div>
       </div>
 
     </div>
-
   </div>
 
   <script>
-    let inscritos = [];
-    const maxPilotos = 3;
-
+    let pilotos = [];
     const form = document.getElementById('formCadastro');
-    const badgeRodada = document.getElementById('badgeRodada');
-    const slotsCount = document.getElementById('slotsCount');
+    const badgeVagas = document.getElementById('badgeVagas');
+    const slotsRestantes = document.getElementById('slotsRestantes');
     const btnSubmit = document.getElementById('btnSubmit');
-    const slotsList = document.getElementById('slotsList');
-    const winnerBanner = document.getElementById('winner-banner');
-    const winnerText = document.getElementById('winner-text');
-    const btnReset = document.getElementById('btnReset');
+    const gridList = document.getElementById('gridList');
+    const podiumBox = document.getElementById('podiumBox');
+    const podiumMessage = document.getElementById('podiumMessage');
+    const btnNovaBateria = document.getElementById('btnNovaBateria');
+    const btnVoltarForm = document.getElementById('btnVoltarForm');
 
-    // Atualiza a interface
-    function atualizarInterface() {
-      const total = inscritos.length;
-      badgeRodada.textContent = `Piloto ${Math.min(total + 1, 3)} de 3`;
-      slotsCount.textContent = total >= 3 ? "Grid Fechado!" : `Restam ${3 - total} vaga(s)`;
+    function atualizarGrid() {
+      const qtd = pilotos.length;
+      badgeVagas.textContent = `Piloto ${Math.min(qtd + 1, 3)} de 3`;
+      slotsRestantes.textContent = qtd >= 3 ? "Grid Fechado!" : `${3 - qtd} vaga(s) restante(s)`;
 
-      // Atualiza nomes na pista
-      for (let i = 1; i <= 3; i++) {
-        const piloto = inscritos[i - 1];
-        const nameEl = document.getElementById(`pilot-${i}-name`);
-        if (piloto) {
-          nameEl.innerHTML = `<b>#${i}: ${piloto.nome}</b> (${piloto.cidade || 'Brasil'})`;
-        } else {
-          nameEl.textContent = `Vaga #${i}: Aguardando cadastro...`;
-        }
-      }
+      gridList.innerHTML = '';
+      const cores = ["Vermelho Turbo", "Azul Relâmpago", "Trovão Dourado"];
 
-      // Atualiza lista de slots
-      slotsList.innerHTML = '';
       for (let i = 0; i < 3; i++) {
         const item = document.createElement('div');
-        if (inscritos[i]) {
-          item.className = 'slot-item';
-          item.innerHTML = `<span>🏎️ <b>${inscritos[i].nome}</b></span> <small style="color:#38bdf8">${inscritos[i].cpf}</small>`;
+        if (pilotos[i]) {
+          item.className = 'slot-item filled';
+          item.innerHTML = `<div>🏎️ <b>${pilotos[i].nome}</b><br><small style="color:#94a3b8">${cores[i]}</small></div> <span style="color:#38bdf8; font-weight:600;">#${i + 1}</span>`;
         } else {
           item.className = 'slot-item empty';
-          item.textContent = `Posição ${i + 1}: Livre`;
+          item.textContent = `🏎️ Vaga ${i + 1}: Livre (Bot ${cores[i]})`;
         }
-        slotsList.appendChild(item);
+        gridList.appendChild(item);
       }
 
-      if (total >= 3) {
-        btnSubmit.disabled = true;
-        btnSubmit.textContent = "GRID COMPLETO - CORRIDA INICIADA!";
-      } else {
-        btnSubmit.disabled = false;
-        btnSubmit.textContent = `INSCREVER PILOTO ${total + 1}/3`;
+      if (qtd < 3) {
+        btnSubmit.textContent = `INSCREVER PESSOA (${qtd + 1}/3)`;
       }
     }
 
-    // Limpa todos os campos do formulário
     function limparFormulario() {
       form.reset();
       document.getElementById('nome').focus();
     }
 
-    // Animação da Corrida dos Bots no Autódromo
-    function animarCorrida(callbackVencedor) {
-      let posicoes = [0, 0, 0];
-      const cars = [
-        document.getElementById('car-1'),
-        document.getElementById('car-2'),
-        document.getElementById('car-3')
-      ];
+    // Transição da pista de Background para Primário
+    function ativarModoCorridaPrimario() {
+      // Preenche os nomes na pista do autódromo
+      document.getElementById('arena-bot-1-name').innerHTML = `Piloto: <b>${pilotos[0].nome}</b> (${pilotos[0].cpf})`;
+      document.getElementById('arena-bot-2-name').innerHTML = `Piloto: <b>${pilotos[1].nome}</b> (${pilotos[1].cpf})`;
+      document.getElementById('arena-bot-3-name').innerHTML = `Piloto: <b>${pilotos[2].nome}</b> (${pilotos[2].cpf})`;
 
-      // Reinicia posições
-      cars.forEach(c => c.style.left = '0%');
-      winnerBanner.style.display = 'none';
+      // Ativa a classe que traz a pista para plano primário com transição suave
+      document.body.classList.add('race-mode');
 
-      const interval = setInterval(() => {
-        let vencedorIndex = -1;
-
-        for (let i = 0; i < 3; i++) {
-          // Cada bot tem velocidade randômica simulada
-          const incremento = Math.floor(Math.random() * 8) + 3;
-          posicoes[i] += incremento;
-
-          if (posicoes[i] >= 90) { // Linha de chegada
-            posicoes[i] = 90;
-            if (vencedorIndex === -1) vencedorIndex = i;
-          }
-          cars[i].style.left = `${posicoes[i]}%`;
-        }
-
-        if (vencedorIndex !== -1) {
-          clearInterval(interval);
-          const campeao = inscritos[vencedorIndex];
-          winnerBanner.style.display = 'block';
-          winnerText.innerHTML = `🏎️ O Bot #${vencedorIndex + 1} pilotando por <b>${campeao.nome}</b> cruzou a linha em 1º Lugar!`;
-          if (callbackVencedor) callbackVencedor(campeao);
-        }
-      }, 250);
+      // Dispara a disputa dos carros
+      setTimeout(() => {
+        iniciarDisputaAutodromo();
+      }, 900);
     }
 
-    // Submissão do formulário
+    function iniciarDisputaAutodromo() {
+      const cars = [
+        document.getElementById('arena-car-1'),
+        document.getElementById('arena-car-2'),
+        document.getElementById('arena-car-3')
+      ];
+
+      cars.forEach(c => c.style.left = '0%');
+      podiumBox.style.display = 'none';
+
+      let posicoes = [0, 0, 0];
+      let finalizado = false;
+
+      const timer = setInterval(() => {
+        if (finalizado) return;
+
+        for (let i = 0; i < 3; i++) {
+          const acel = Math.floor(Math.random() * 9) + 4;
+          posicoes[i] += acel;
+
+          if (posicoes[i] >= 88) {
+            posicoes[i] = 88;
+            finalizado = true;
+            clearInterval(timer);
+
+            const campeao = pilotos[i];
+            const cores = ["Vermelho Turbo", "Azul Relâmpago", "Trovão Dourado"];
+
+            podiumBox.style.display = 'block';
+            podiumMessage.innerHTML = `O <b>Bot #${i + 1} (${cores[i]})</b> assumido por <br><span style="color:#facc15; font-size:1.4rem;">${campeao.nome}</span> venceu o Grande Prêmio!`;
+            break;
+          }
+
+          cars[i].style.left = `${posicoes[i]}%`;
+        }
+      }, 260);
+    }
+
+    function resetarTudo() {
+      pilotos = [];
+      document.body.classList.remove('race-mode');
+      podiumBox.style.display = 'none';
+      [1, 2, 3].forEach(i => {
+        document.getElementById(`arena-car-${i}`).style.left = '0%';
+      });
+      limparFormulario();
+      atualizarGrid();
+
+      // Reset no servidor
+      fetch('http://localhost:5000/api/corrida/reset', { method: 'POST' }).catch(() => {});
+    }
+
+    btnNovaBateria.addEventListener('click', resetarTudo);
+    btnVoltarForm.addEventListener('click', resetarTudo);
+
+    // Envio do formulário
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      if (inscritos.length >= 3) {
-        alert("O limite de 3 pilotos já foi atingido! Clique em 'Nova Corrida' para resetar.");
-        return;
-      }
+      if (pilotos.length >= 3) return;
 
-      const payload = {
+      const dados = {
         nome: document.getElementById('nome').value,
         cpf: document.getElementById('cpf').value,
         dataNascimento: document.getElementById('dataNascimento').value,
@@ -540,48 +656,27 @@
       };
 
       try {
-        const response = await fetch('http://localhost:5000/api/cadastro', {
+        await fetch('http://localhost:5000/api/cadastro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(dados)
         });
+      } catch (err) {}
 
-        const resData = await response.json();
+      // Registra piloto
+      pilotos.push(dados);
 
-        // Salva nos inscritos locais
-        inscritos.push(payload);
+      // Limpa os campos para o próximo
+      limparFormulario();
+      atualizarGrid();
 
-        // REGRA 1 & 2: Limpa todas as labels e campos do formulário para o próximo piloto!
-        limparFormulario();
-        atualizarInterface();
-
-        // REGRA 3: Se completou 3 pessoas, inicia a corrida dos bots no autódromo!
-        if (inscritos.length === 3) {
-          animarCorrida();
-        }
-
-      } catch (err) {
-        alert("Erro ao conectar com o servidor local. Verifique se o terminal está ativo na porta 5000.");
+      // Se atingiu o limite de 3 pilotos, traz o autódromo para plano primário!
+      if (pilotos.length === 3) {
+        ativarModoCorridaPrimario();
       }
     });
 
-    // Resetar grid
-    btnReset.addEventListener('click', async () => {
-      try {
-        await fetch('http://localhost:5000/api/corrida/reset', { method: 'POST' });
-      } catch (e) {}
-
-      inscritos = [];
-      [1, 2, 3].forEach(i => {
-        document.getElementById(`car-${i}`).style.left = '0%';
-      });
-      winnerBanner.style.display = 'none';
-      limparFormulario();
-      atualizarInterface();
-    });
-
-    // Início
-    atualizarInterface();
+    atualizarGrid();
   </script>
 
 </body>
