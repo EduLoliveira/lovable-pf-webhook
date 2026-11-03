@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 title Git Sync - Commit & Push para GitHub
-cd /d "%~dp0"
+cd /d "%~dp0\..\.."
 
 set "GIT_CMD=C:\Users\Eduardo Oliveira\AppData\Local\Programs\Git\cmd\git.exe"
 if not exist "%GIT_CMD%" set "GIT_CMD=git"
@@ -18,7 +18,7 @@ echo.
 set /p COMMIT_MSG="Digite a mensagem do commit (ou Enter para padrao): "
 
 if "%COMMIT_MSG%"=="" (
-    set "COMMIT_MSG=feat: update project files and autodrome animations"
+    set "COMMIT_MSG=chore: internal maintenance and updates"
 )
 
 echo.
