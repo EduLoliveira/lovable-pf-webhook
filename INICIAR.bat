@@ -1,5 +1,5 @@
 @echo off
-title Receptor de Cadastro PF - Lovable Integration
+title Autodromo Bot Racing - Terminal Server
 cd /d "%~dp0"
-powershell -NoProfile -ExecutionPolicy Bypass -File "iniciar_terminal.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "src\server\iniciar_terminal.ps1"
 pause
