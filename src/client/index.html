@@ -35,12 +35,11 @@
       background: radial-gradient(circle at center, #10192d 10%, #030712 90%);
     }
 
-    /* Pista em formato realista de autódromo */
     .circuit-board {
       width: 100%;
       max-width: 1100px;
       height: 580px;
-      background: #14532d; /* Grama ao redor */
+      background: #14532d;
       border: 14px solid #1e293b;
       border-radius: 90px;
       position: relative;
@@ -48,68 +47,76 @@
       box-shadow: inset 0 0 80px rgba(0,0,0,0.8), 0 20px 60px rgba(0,0,0,0.9);
     }
 
-    /* Asfalto da pista com zebras e textura */
     .track-asphalt-circuit {
       position: absolute;
       inset: 40px;
       border-radius: 70px;
-      border: 55px solid #1e2530; /* Asfalto largo */
+      border: 65px solid #1e2530;
       box-shadow: 
-        inset 0 0 0 4px #ef4444, 
-        inset 0 0 0 8px #ffffff,
-        0 0 0 4px #ef4444,
-        0 0 0 8px #ffffff; /* Zebras externas e internas F1 */
+        inset 0 0 0 5px #ef4444, 
+        inset 0 0 0 10px #ffffff,
+        0 0 0 5px #ef4444,
+        0 0 0 10px #ffffff;
     }
 
-    /* Miolo interno do autódromo (Paddock, grama e lago central) */
     .infield {
       position: absolute;
-      inset: 95px;
+      inset: 105px;
       background: #166534;
-      border-radius: 40px;
+      border-radius: 35px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       border: 4px solid #0f172a;
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.6);
+      box-shadow: inset 0 0 35px rgba(0,0,0,0.6);
+      z-index: 15;
     }
 
-    /* Linha pontilhada no centro do asfalto */
     .track-guide-line {
       position: absolute;
-      inset: 67px;
-      border-radius: 56px;
-      border: 2px dashed rgba(250, 204, 21, 0.6);
+      inset: 72px;
+      border-radius: 54px;
+      border: 2px dashed rgba(250, 204, 21, 0.5);
       pointer-events: none;
     }
 
-    /* Linha de Chegada / Largada com Grid Quadriculado */
     .grid-finish-line {
       position: absolute;
       bottom: 40px;
       left: 50%;
-      width: 55px;
-      height: 18px;
+      width: 65px;
+      height: 20px;
       transform: translateX(-50%);
       background: repeating-linear-gradient(45deg, #fff, #fff 5px, #000 5px, #000 10px);
       z-index: 5;
-      box-shadow: 0 0 10px rgba(255,255,255,0.8);
+      box-shadow: 0 0 12px rgba(255,255,255,0.8);
     }
 
-    /* Carros de corrida no circuito */
+    /* Carros de corrida */
     .f1-car {
       position: absolute;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 1.6rem;
-      z-index: 10;
+      font-size: 1.8rem;
+      z-index: 20;
       transform: translate(-50%, -50%);
-      transition: transform 0.1s linear;
-      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.9));
+      transition: transform 0.15s linear, opacity 0.4s ease;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.9));
+    }
+
+    .f1-car.crashed {
+      filter: grayscale(1) drop-shadow(0 0 12px #ef4444);
+      animation: carSpinCrash 0.7s forwards;
+    }
+
+    @keyframes carSpinCrash {
+      0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+      50% { transform: translate(-50%, -50%) rotate(240deg) scale(1.3); }
+      100% { transform: translate(-50%, -50%) rotate(480deg) scale(0.9); opacity: 0.45; }
     }
 
     .car-tag-float {
@@ -118,16 +125,14 @@
       white-space: nowrap;
       font-size: 0.65rem;
       font-weight: 800;
-      padding: 1px 5px;
+      padding: 1px 6px;
       border-radius: 4px;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
       color: #fff;
       font-family: 'Orbitron', sans-serif;
     }
 
-    /* =====================================================================
-       QUANDO OS 3 PILOTOS SÃO ADICIONADOS -> PRIMÁRIO!
-       ===================================================================== */
+    /* TRANSIÇÃO PRIMÁRIA */
     body.race-active #racetrack-viewport {
       opacity: 1;
       z-index: 100;
@@ -141,9 +146,7 @@
       pointer-events: none;
     }
 
-    /* =====================================================================
-       PAINEL DE TELEMETRIA CENTRAL (VOLTAS / TEMPO)
-       ===================================================================== */
+    /* TELEMETRIA & PAINEL DE CONTROLE */
     .telemetry-board {
       text-align: center;
       z-index: 20;
@@ -151,48 +154,110 @@
 
     .gp-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       color: #facc15;
       letter-spacing: 2px;
-      text-shadow: 0 0 15px rgba(250, 204, 21, 0.5);
     }
 
     .lap-counter-box {
-      margin-top: 10px;
+      margin-top: 8px;
       background: rgba(15, 23, 42, 0.9);
-      padding: 8px 18px;
+      padding: 6px 16px;
       border-radius: 30px;
       border: 1px solid #334155;
       display: inline-flex;
       align-items: center;
       gap: 10px;
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: #38bdf8;
     }
 
+    /* SEMÁFORO DE LARGADA */
+    .start-lights-box {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      background: #090d16;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+    }
+
+    .light-bulb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #334155;
+      transition: all 0.2s;
+    }
+    .light-bulb.red { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+    .light-bulb.green { background: #22c55e; box-shadow: 0 0 12px #22c55e; }
+
+    /* BOTÃO DE LARGADA */
+    .btn-largada {
+      margin-top: 10px;
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      border: 2px solid #4ade80;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      padding: 10px 28px;
+      border-radius: 10px;
+      cursor: pointer;
+      letter-spacing: 1.5px;
+      transition: all 0.25s;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+    }
+    .btn-largada:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 30px rgba(74, 222, 128, 0.8);
+    }
+    .btn-largada:disabled {
+      background: #334155;
+      border-color: #475569;
+      color: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
     .standings-list {
-      margin-top: 14px;
+      margin-top: 10px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      width: 280px;
+      gap: 5px;
+      width: 290px;
     }
 
     .standing-item {
       background: rgba(2, 6, 23, 0.85);
       border: 1px solid #334155;
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 6px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+    .standing-item.dnf {
+      border-color: #ef4444;
+      background: rgba(69, 10, 10, 0.5);
+      color: #fca5a5;
+    }
 
-    /* =====================================================================
-       FORMULÁRIO DE CADASTRO (CAMADA INICIAL)
-       ===================================================================== */
+    /* AVISO DE INCIDENTE NA PISTA (YELLOW FLAG) */
+    .incident-alert {
+      margin-top: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #facc15;
+      min-height: 18px;
+    }
+
+    /* FORMULÁRIO DE CADASTRO */
     .form-layer {
       position: relative;
       z-index: 10;
@@ -263,11 +328,8 @@
       align-items: center;
       gap: 6px;
       transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
     }
-
     .btn-auto-fill:hover {
-      transform: translateY(-1px);
       box-shadow: 0 6px 18px rgba(139, 92, 246, 0.5);
     }
 
@@ -352,23 +414,22 @@
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 150;
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.96);
       border: 3px solid #facc15;
       border-radius: 20px;
       padding: 30px 40px;
       text-align: center;
-      box-shadow: 0 0 60px rgba(250, 204, 21, 0.6);
+      box-shadow: 0 0 70px rgba(250, 204, 21, 0.7);
     }
   </style>
 </head>
 <body>
 
   <!-- =====================================================================
-       PISTA REAL DO AUTÓDROMO (DO BACKGROUND PARA O PRIMÁRIO)
+       PISTA REAL DO AUTÓDROMO
        ===================================================================== -->
   <div id="racetrack-viewport">
     <div class="circuit-board" id="circuitBox">
-      <!-- Asfalto largo com Zebras F1 -->
       <div class="track-asphalt-circuit"></div>
       <div class="track-guide-line"></div>
       <div class="grid-finish-line"></div>
@@ -387,28 +448,46 @@
       <!-- INFIELD / TELEMETRIA CENTRAL -->
       <div class="infield">
         <div class="telemetry-board">
-          <div class="gp-title">🏁 AUTÓDROMO DE INTERLAGOS GP</div>
+          <div class="gp-title">🏁 GP INTERLAGOS - 3 VOLTAS</div>
           
           <div class="lap-counter-box">
             <span>VOLTA:</span>
-            <span id="lapDisplay" style="color:#facc15; font-size:1.4rem;">1 / 3</span>
+            <span id="lapDisplay" style="color:#facc15; font-size:1.4rem;">0 / 3</span>
           </div>
 
+          <!-- SEMÁFORO DE LARGADA -->
+          <div class="start-lights-box">
+            <div class="light-bulb red" id="light1"></div>
+            <div class="light-bulb red" id="light2"></div>
+            <div class="light-bulb red" id="light3"></div>
+            <div class="light-bulb red" id="light4"></div>
+            <div class="light-bulb red" id="light5"></div>
+          </div>
+
+          <!-- BOTÃO DE LARGADA -->
+          <div>
+            <button class="btn-largada" id="btnLargada">🚦 LARGADA</button>
+          </div>
+
+          <!-- AVISO DE ACIDENTE / FORA DA PISTA -->
+          <div class="incident-alert" id="incidentAlert">Aguardando autorização de largada no grid...</div>
+
+          <!-- RANKING AO VIVO -->
           <div class="standings-list" id="standingsBox">
-            <div class="standing-item"><span>1º Hamilton</span><span style="color:#facc15">Líder</span></div>
-            <div class="standing-item"><span>2º Leclerc</span><span style="color:#94a3b8">+0.4s</span></div>
-            <div class="standing-item"><span>3º Bortoleto</span><span style="color:#94a3b8">+1.1s</span></div>
+            <div class="standing-item"><span>1º Piloto</span><span style="color:#94a3b8">Grid</span></div>
+            <div class="standing-item"><span>2º Piloto</span><span style="color:#94a3b8">Grid</span></div>
+            <div class="standing-item"><span>3º Piloto</span><span style="color:#94a3b8">Grid</span></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- PÓDIO FINAL APÓS AS 3 VOLTAS -->
+  <!-- PÓDIO FINAL -->
   <div id="winner-modal">
-    <h2 style="font-family:'Orbitron'; font-size:2rem; color:#facc15; margin-bottom:10px;">🏆 GRANDE CAMPEÃO DO GP! 🏆</h2>
-    <p id="winnerText" style="font-size:1.2rem; font-weight:600; margin-bottom:16px;"></p>
-    <button class="btn-auto-fill" id="btnReiniciar" style="font-size:1rem; padding:12px 24px;">NOVA CORRIDA (3 VOLTAS)</button>
+    <h2 style="font-family:'Orbitron'; font-size:2rem; color:#facc15; margin-bottom:10px;">🏆 BANDEIRA QUADRICULADA! 🏆</h2>
+    <p id="winnerText" style="font-size:1.15rem; font-weight:600; margin-bottom:16px;"></p>
+    <button class="btn-auto-fill" id="btnReiniciar" style="font-size:1rem; padding:12px 24px;">NOVO GRID DE PILOTOS</button>
   </div>
 
   <!-- =====================================================================
@@ -418,13 +497,13 @@
     <header>
       <h1>CADASTRO PF & GP 3 VOLTAS</h1>
       <p style="color:#94a3b8; font-size:0.95rem; margin-top:4px;">
-        Cadastre 3 pilotos. Na 3ª pessoa, a pista real surge do fundo para disputar 3 voltas completas!
+        Cadastre 3 pilotos. Na 3ª pessoa, a pista surge do fundo. Clique em <b>LARGADA</b> para acender as luzes!
       </p>
     </header>
 
     <div class="container">
       
-      <!-- CARD FORMULÁRIO -->
+      <!-- FORMULÁRIO -->
       <div class="card">
         <div class="badge-bar">
           <span class="badge" id="badgePiloto">Piloto 1 de 3</span>
@@ -436,7 +515,7 @@
         <form id="formCadastro">
           <div class="field">
             <label for="nome">Nome Completo</label>
-            <input type="text" id="nome" required placeholder="Digite ou clique em Preencher Automático">
+            <input type="text" id="nome" required placeholder="Digite ou use o Preenchimento Automático">
           </div>
 
           <div class="grid-2">
@@ -474,7 +553,7 @@
 
           <div class="field">
             <label for="observacoes">Observações / Equipe</label>
-            <textarea id="observacoes" rows="2" placeholder="Acerto de aerodinâmica e pneus..."></textarea>
+            <textarea id="observacoes" rows="2" placeholder="Informações do piloto..."></textarea>
           </div>
 
           <button type="submit" class="btn-submit" id="btnSubmit">
@@ -483,12 +562,12 @@
         </form>
       </div>
 
-      <!-- CARD STATUS DO GRID -->
+      <!-- GRID DE LARGADA -->
       <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
         <div>
           <h3 style="font-family:'Orbitron'; font-size:1.1rem; color:#38bdf8; margin-bottom:12px;">Grid de Pilotos Registrados</h3>
           <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:16px;">
-            Ao submeter o 3º piloto, todos os campos são limpos e o autódromo em background assume a tela em primeiro plano.
+            Ao registrar o 3º piloto, os campos são limpos e o circuito entra em primeiro plano pronto para a largada!
           </p>
 
           <div id="gridSlots">
@@ -498,8 +577,8 @@
           </div>
         </div>
 
-        <div style="background:rgba(56, 189, 248, 0.1); border:1px solid #0284c7; padding:12px; border-radius:10px; font-size:0.8rem; color:#bae6fd;">
-          🏁 <b>Modo Corrida Real:</b> Total de <b>3 voltas</b> completas com telemetria e posições atualizadas ao vivo no circuito!
+        <div style="background:rgba(239, 68, 68, 0.1); border:1px solid #ef4444; padding:12px; border-radius:10px; font-size:0.8rem; color:#fca5a5;">
+          ⚠️ <b>Física Realista de Corrida:</b> Pilotos correm no asfalto! Se rodarem, baterem ou saírem da pista, sofrem <b>DNF (Abandonam a corrida)</b> imediatamente.
         </div>
       </div>
 
@@ -507,7 +586,6 @@
   </div>
 
   <script>
-    // Pilotos pré-definidos para o sorteio do botão de Preencher Automático
     const poolPilotosF1 = [
       {
         nome: "Lewis Hamilton",
@@ -551,17 +629,15 @@
     const btnPreenchimentoAuto = document.getElementById('btnPreenchimentoAuto');
     const lapDisplay = document.getElementById('lapDisplay');
     const standingsBox = document.getElementById('standingsBox');
+    const incidentAlert = document.getElementById('incidentAlert');
+    const btnLargada = document.getElementById('btnLargada');
     const winnerModal = document.getElementById('winner-modal');
     const winnerText = document.getElementById('winnerText');
     const btnReiniciar = document.getElementById('btnReiniciar');
 
-    // BOTÃO DE PREENCHIMENTO AUTOMÁTICO (SORTEIO ENTRE HAMILTON, LECLERC E BORTOLETO)
+    // BOTÃO PREENCHER AUTOMÁTICO (SORTEIO)
     btnPreenchimentoAuto.addEventListener('click', () => {
-      if (pilotosDisponiveis.length === 0) {
-        pilotosDisponiveis = [...poolPilotosF1];
-      }
-
-      // Sorteia um dos pilotos da lista
+      if (pilotosDisponiveis.length === 0) pilotosDisponiveis = [...poolPilotosF1];
       const indexSorteado = Math.floor(Math.random() * pilotosDisponiveis.length);
       const piloto = pilotosDisponiveis.splice(indexSorteado, 1)[0];
 
@@ -605,17 +681,14 @@
     }
 
     // =====================================================================
-    // FÍSICA E ANIMAÇÃO DA PISTA REAL EM 3 VOLTAS
+    // TRAÇADO DA PISTA (DENTRO DO ASFALTO)
     // =====================================================================
     function getCircuitCoordinates(progressNormalized, laneOffset) {
-      // Retângulo com cantos arredondados simulando o circuito oficial
-      // Progress: 0.0 até 1.0 (onde 1.0 é uma volta completa)
       const w = 1000;
       const h = 500;
       const r = 160 + laneOffset;
 
       const p = (progressNormalized % 1.0 + 1.0) % 1.0;
-      // Perímetro aproximado
       const straightX = w - 2 * r;
       const straightY = h - 2 * r;
       const arcLen = (Math.PI * r) / 2;
@@ -623,74 +696,61 @@
 
       let dist = p * totalPerimeter;
 
-      // Bottom Straight (Largada/Chegada)
+      // Bottom Straight
       if (dist <= straightX) {
-        return { x: (w / 2) + (dist - straightX / 2), y: h - laneOffset, angle: 0 };
+        return { x: (w / 2) + (dist - straightX / 2), y: h - laneOffset };
       }
       dist -= straightX;
 
       // Bottom-Right Corner
       if (dist <= arcLen) {
         const a = (dist / arcLen) * (Math.PI / 2);
-        return {
-          x: w - r + Math.sin(a) * r,
-          y: h - r + Math.cos(a) * (r - laneOffset),
-          angle: - (a * 180 / Math.PI)
-        };
+        return { x: w - r + Math.sin(a) * r, y: h - r + Math.cos(a) * (r - laneOffset) };
       }
       dist -= arcLen;
 
       // Right Straight
       if (dist <= straightY) {
-        return { x: w - laneOffset, y: (h - r) - dist, angle: -90 };
+        return { x: w - laneOffset, y: (h - r) - dist };
       }
       dist -= straightY;
 
       // Top-Right Corner
       if (dist <= arcLen) {
         const a = (dist / arcLen) * (Math.PI / 2);
-        return {
-          x: w - r + Math.cos(a) * r,
-          y: r - Math.sin(a) * (r - laneOffset),
-          angle: -90 - (a * 180 / Math.PI)
-        };
+        return { x: w - r + Math.cos(a) * r, y: r - Math.sin(a) * (r - laneOffset) };
       }
       dist -= arcLen;
 
       // Top Straight
       if (dist <= straightX) {
-        return { x: (w - r) - dist, y: laneOffset, angle: 180 };
+        return { x: (w - r) - dist, y: laneOffset };
       }
       dist -= straightX;
 
       // Top-Left Corner
       if (dist <= arcLen) {
         const a = (dist / arcLen) * (Math.PI / 2);
-        return {
-          x: r - Math.sin(a) * r,
-          y: r - Math.cos(a) * (r - laneOffset),
-          angle: -180 - (a * 180 / Math.PI)
-        };
+        return { x: r - Math.sin(a) * r, y: r - Math.cos(a) * (r - laneOffset) };
       }
       dist -= arcLen;
 
       // Left Straight
       if (dist <= straightY) {
-        return { x: laneOffset, y: r + dist, angle: 90 };
+        return { x: laneOffset, y: r + dist };
       }
       dist -= straightY;
 
       // Bottom-Left Corner
       const a = (dist / arcLen) * (Math.PI / 2);
-      return {
-        x: r - Math.cos(a) * r,
-        y: (h - r) + Math.sin(a) * (r - laneOffset),
-        angle: 90 - (a * 180 / Math.PI)
-      };
+      return { x: r - Math.cos(a) * r, y: (h - r) + Math.sin(a) * (r - laneOffset) };
     }
 
-    function iniciarCorridaTresVoltas() {
+    // Posiciona os carros no Grid de Largada
+    function posicionarNoGrid() {
       document.body.classList.add('race-active');
+      btnLargada.disabled = false;
+      incidentAlert.textContent = "Carros alinhados no grid! Pressione LARGADA para iniciar!";
 
       const carsElements = [
         document.getElementById('car-1'),
@@ -698,59 +758,148 @@
         document.getElementById('car-3')
       ];
 
-      // Atualiza tags dos carros
+      const offsets = [46, 68, 90];
+      const box = document.getElementById('circuitBox').getBoundingClientRect();
+      const scaleX = box.width / 1000;
+      const scaleY = box.height / 500;
+
       for (let i = 0; i < 3; i++) {
+        carsElements[i].classList.remove('crashed');
         carsElements[i].querySelector('.car-tag-float').textContent = pilotosInscritos[i].nome.split(' ')[0].toUpperCase();
+        
+        // Posição escalonada na reta de largada
+        const startProgress = 0.0 + (i * -0.025);
+        const coord = getCircuitCoordinates(startProgress, offsets[i]);
+        carsElements[i].style.left = `${coord.x * scaleX}px`;
+        carsElements[i].style.top = `${coord.y * scaleY}px`;
       }
 
-      let progressoVoltas = [0.0, 0.0, 0.0]; // de 0.0 a 3.0
-      const totalVoltas = 3;
-      const offsets = [48, 68, 88]; // Faixas de asfalto diferentes para cada carro
+      standingsBox.innerHTML = pilotosInscritos.map((p, idx) => `
+        <div class="standing-item">
+          <span>${idx + 1}º ${p.nome}</span>
+          <span style="color:#38bdf8;">Grid P${idx + 1}</span>
+        </div>
+      `).join('');
+    }
 
-      let raceInterval = setInterval(() => {
-        let liderProgresso = Math.max(...progressoVoltas);
-        let voltaAtual = Math.min(3, Math.floor(liderProgresso) + 1);
+    // =====================================================================
+    // PROCEDIMENTO DE LARGADA & CORRIDA REAL COM BATIDAS / DNF
+    // =====================================================================
+    btnLargada.addEventListener('click', () => {
+      btnLargada.disabled = true;
+      incidentAlert.textContent = "Preparando largada... 5 luzes vermelhas acendendo!";
+
+      const lights = [
+        document.getElementById('light1'),
+        document.getElementById('light2'),
+        document.getElementById('light3'),
+        document.getElementById('light4'),
+        document.getElementById('light5')
+      ];
+
+      // Acende uma a uma
+      let count = 0;
+      const lightInterval = setInterval(() => {
+        if (count < 5) {
+          lights[count].className = 'light-bulb red';
+          count++;
+        } else {
+          clearInterval(lightInterval);
+          // Apaga as vermelhas e acende verdes!
+          setTimeout(() => {
+            lights.forEach(l => l.className = 'light-bulb green');
+            incidentAlert.textContent = "🟢 LARGADA AUTORIZADA! PÉ NO ACELERADOR!";
+            iniciarDisputaTresVoltas();
+          }, 800);
+        }
+      }, 350);
+    });
+
+    function iniciarDisputaTresVoltas() {
+      const carsElements = [
+        document.getElementById('car-1'),
+        document.getElementById('car-2'),
+        document.getElementById('car-3')
+      ];
+
+      let progressoVoltas = [0.0, -0.025, -0.05];
+      let bateu = [false, false, false];
+      const offsets = [46, 68, 90];
+      const totalVoltas = 3;
+
+      let loop = setInterval(() => {
+        const vivos = [0, 1, 2].filter(idx => !bateu[idx]);
+
+        // Se todos baterem
+        if (vivos.length === 0) {
+          clearInterval(loop);
+          incidentAlert.textContent = "🚩 RED FLAG! Todos os carros se acidentaram!";
+          winnerModal.style.display = 'block';
+          winnerText.innerHTML = "Todos os pilotos bateram e saíram da pista! Corrida sem vencedores.";
+          return;
+        }
+
+        let liderProgresso = Math.max(...vivos.map(idx => progressoVoltas[idx]));
+        let voltaAtual = Math.min(3, Math.floor(Math.max(0, liderProgresso)) + 1);
         lapDisplay.textContent = `${voltaAtual} / ${totalVoltas}`;
 
-        // Atualização de posição e telemetria
+        const box = document.getElementById('circuitBox').getBoundingClientRect();
+        const scaleX = box.width / 1000;
+        const scaleY = box.height / 500;
+
         for (let i = 0; i < 3; i++) {
-          const incremento = (Math.random() * 0.007) + 0.006; // velocidade
-          progressoVoltas[i] += incremento;
+          if (bateu[i]) continue;
+
+          // VELOCIDADE DINÂMICA
+          const vel = (Math.random() * 0.0075) + 0.006;
+          progressoVoltas[i] += vel;
+
+          // ===============================================================
+          // CHANCE REAL DE BATIDA / SAIR DA PISTA (DNF)
+          // ===============================================================
+          // 0.3% de chance por tick de rodar na curva
+          if (progressoVoltas[i] > 0.4 && Math.random() < 0.0035 && vivos.length > 1) {
+            bateu[i] = true;
+            carsElements[i].classList.add('crashed');
+            incidentAlert.innerHTML = `⚠️ <b>YELLOW FLAG!</b> ${pilotosInscritos[i].nome} perdeu o controle, rodou e BATEU! (Fora da corrida)`;
+          }
 
           const coord = getCircuitCoordinates(progressoVoltas[i], offsets[i]);
-          const box = document.getElementById('circuitBox').getBoundingClientRect();
-          const scaleX = box.width / 1000;
-          const scaleY = box.height / 500;
-
           carsElements[i].style.left = `${coord.x * scaleX}px`;
           carsElements[i].style.top = `${coord.y * scaleY}px`;
         }
 
-        // Ordenar tabela de líderes ao vivo
-        const ranking = [0, 1, 2].sort((a, b) => progressoVoltas[b] - progressoVoltas[a]);
-        standingsBox.innerHTML = ranking.map((idx, pos) => {
+        // TABELA DE POSIÇÕES
+        const ordenados = [0, 1, 2].sort((a, b) => {
+          if (bateu[a] && !bateu[b]) return 1;
+          if (!bateu[a] && bateu[b]) return -1;
+          return progressoVoltas[b] - progressoVoltas[a];
+        });
+
+        standingsBox.innerHTML = ordenados.map((idx, pos) => {
           const nome = pilotosInscritos[idx].nome;
-          const voltasFeitas = Math.floor(progressoVoltas[idx]);
+          if (bateu[idx]) {
+            return `<div class="standing-item dnf"><span>💥 ${nome}</span><span>DNF (Bateu)</span></div>`;
+          }
           return `<div class="standing-item">
             <span>${pos + 1}º ${nome}</span>
-            <span style="color:${pos === 0 ? '#facc15' : '#94a3b8'}">${pos === 0 ? 'Líder' : 'Volta ' + (voltasFeitas + 1)}</span>
+            <span style="color:${pos === 0 ? '#facc15' : '#38bdf8'}">${pos === 0 ? 'Líder' : 'Volta ' + (Math.floor(progressoVoltas[idx]) + 1)}</span>
           </div>`;
         }).join('');
 
-        // FIM DA CORRIDA: QUANDO O LÍDER COMPLETA 3 VOLTAS!
+        // CHEGADA DAS 3 VOLTAS
         if (liderProgresso >= 3.0) {
-          clearInterval(raceInterval);
-          const campeaoIdx = ranking[0];
+          clearInterval(loop);
+          const campeaoIdx = ordenados[0];
           const campeao = pilotosInscritos[campeaoIdx];
 
           winnerModal.style.display = 'block';
-          winnerText.innerHTML = `🏆 O piloto <b>${campeao.nome}</b> cruzou a linha de chegada em 1º Lugar após 3 voltas emocionantes!`;
+          winnerText.innerHTML = `🏆 O piloto <b>${campeao.nome}</b> sobreviveu à pista e venceu o GP após 3 voltas completas!`;
         }
-
       }, 50);
     }
 
-    // Submissão do Formulário
+    // CADASTRO DE PILOTO
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (pilotosInscritos.length >= 3) return;
@@ -776,24 +925,27 @@
 
       pilotosInscritos.push(dados);
 
-      // Limpa os campos do formulário para o próximo
       limparFormulario();
       atualizarGrid();
 
-      // Quando o 3º piloto é adicionado, a pista vem do background para o plano primário!
+      // AO COMPLETAR 3 PILOTOS: A PISTA VIRA PLANO PRIMÁRIO E ALINHA NO GRID!
       if (pilotosInscritos.length === 3) {
         setTimeout(() => {
-          iniciarCorridaTresVoltas();
-        }, 600);
+          posicionarNoGrid();
+        }, 500);
       }
     });
 
-    // Reiniciar
+    // REINICIAR
     btnReiniciar.addEventListener('click', () => {
       pilotosInscritos = [];
       pilotosDisponiveis = [...poolPilotosF1];
       document.body.classList.remove('race-active');
       winnerModal.style.display = 'none';
+      [1, 2, 3].forEach(i => {
+        const c = document.getElementById(`car-${i}`);
+        c.classList.remove('crashed');
+      });
       limparFormulario();
       atualizarGrid();
       fetch('http://localhost:5000/api/corrida/reset', { method: 'POST' }).catch(() => {});
