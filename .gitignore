@@ -1,0 +1,6 @@
+# Git Ignore
+cadastros_recebidos.json
+.system_generated/
+*.log
+.DS_Store
+Thumbs.db
